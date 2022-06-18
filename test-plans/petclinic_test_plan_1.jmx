@@ -8,14 +8,14 @@
       <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
       <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
         <collectionProp name="Arguments.arguments">
-          <elementProp name="PETCLINC_HOST" elementType="Argument">
-            <stringProp name="Argument.name">PETCLINC_HOST</stringProp>
-            <stringProp name="Argument.value">localhost</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
-          </elementProp>
           <elementProp name="PETCLINIC_PORT" elementType="Argument">
             <stringProp name="Argument.name">PETCLINIC_PORT</stringProp>
-            <stringProp name="Argument.value">8080</stringProp>
+            <stringProp name="Argument.value">${__P(port)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="PETCLINIC_HOST" elementType="Argument">
+            <stringProp name="Argument.name">PETCLINIC_HOST</stringProp>
+            <stringProp name="Argument.value">${__P(host)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -27,7 +27,7 @@
         <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="Variables pr�-d�finies" enabled="true">
           <collectionProp name="Arguments.arguments"/>
         </elementProp>
-        <stringProp name="HTTPSampler.domain">${PETCLINC_HOST}</stringProp>
+        <stringProp name="HTTPSampler.domain">${PETCLINIC_HOST}</stringProp>
         <stringProp name="HTTPSampler.port">${PETCLINIC_PORT}</stringProp>
         <stringProp name="HTTPSampler.protocol"></stringProp>
         <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -56,36 +56,36 @@
       <hashTree/>
       <kg.apc.jmeter.threads.UltimateThreadGroup guiclass="kg.apc.jmeter.threads.UltimateThreadGroupGui" testclass="kg.apc.jmeter.threads.UltimateThreadGroup" testname="jp@gc - Ultimate Thread Group" enabled="true">
         <collectionProp name="ultimatethreadgroupdata">
-          <collectionProp name="1308883515">
-            <stringProp name="48625">100</stringProp>
+          <collectionProp name="1825336139">
+            <stringProp name="49">1</stringProp>
             <stringProp name="0">0</stringProp>
             <stringProp name="1629">30</stringProp>
             <stringProp name="1722">60</stringProp>
             <stringProp name="1567">10</stringProp>
           </collectionProp>
-          <collectionProp name="1455076711">
-            <stringProp name="50547">300</stringProp>
+          <collectionProp name="202374818">
+            <stringProp name="51">3</stringProp>
             <stringProp name="1815">90</stringProp>
             <stringProp name="1567">10</stringProp>
             <stringProp name="60">60</stringProp>
             <stringProp name="1598">20</stringProp>
           </collectionProp>
-          <collectionProp name="-1343912004">
-            <stringProp name="52469">500</stringProp>
+          <collectionProp name="460555120">
+            <stringProp name="53">5</stringProp>
             <stringProp name="48811">160</stringProp>
             <stringProp name="30">30</stringProp>
             <stringProp name="60">60</stringProp>
             <stringProp name="10">10</stringProp>
           </collectionProp>
-          <collectionProp name="-1670074452">
-            <stringProp name="1507423">1000</stringProp>
+          <collectionProp name="211665075">
+            <stringProp name="1567">10</stringProp>
             <stringProp name="49741">250</stringProp>
             <stringProp name="30">30</stringProp>
             <stringProp name="60">60</stringProp>
             <stringProp name="1629">30</stringProp>
           </collectionProp>
-          <collectionProp name="500252178">
-            <stringProp name="52469">500</stringProp>
+          <collectionProp name="-1990247994">
+            <stringProp name="53">5</stringProp>
             <stringProp name="50671">340</stringProp>
             <stringProp name="30">30</stringProp>
             <stringProp name="60">60</stringProp>
