@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export RESULTS_FILE=results.jtl
-export TEST_PLAN=petclinic_test_plan_1.jmx
+export TEST_PLAN=./test-plans/petclinic_test_plan_1.jmx
 
 while : ; do
   EXTERNAL_IP=$(kubectl get svc -n spring-petclinic api-gateway | sed -n '2p' | awk '{ print $4 }')
