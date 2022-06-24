@@ -12,7 +12,7 @@ Set two [subnet ID](https://us-east-1.console.aws.amazon.com/vpc/home?region=us-
 3. Run `./scripts/deploy.sh` script
 
 # Telemetry
-To see gathered telemetry, run:
-``kubectl get pods --namespace spring-petclinic``
-copy name of a cluster that starts with `simple-collector` and run
-``kubectl logs <cluster-name> --namespace spring-petclinic``
+## Metrics
+``istioctl dashboard prometheus``
+## Traces
+``istioctl dashboard zipkin``
