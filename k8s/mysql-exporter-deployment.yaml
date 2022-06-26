@@ -1,0 +1,97 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-exporter-customers
+  namespace: spring-petclinic
+spec:
+  selector:
+    matchLabels:
+      app: mysql-exporter-customers
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mysql-exporter-customers
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9104"
+    spec:
+      containers:
+        - name: mysql-exporter
+          image: prom/mysqld-exporter:latest
+          ports:
+            - containerPort: 9104
+          env:
+            - name: DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: customers-db-mysql
+                  key: mysql-root-password
+            - name: DATA_SOURCE_NAME
+              value: "root:$(DATASOURCE_PASSWORD)@(customers-db-mysql.spring-petclinic.svc.cluster.local:3306)/service_instance_db"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-exporter-vets
+  namespace: spring-petclinic
+spec:
+  selector:
+    matchLabels:
+      app: mysql-exporter-vets
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mysql-exporter-vets
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9104"
+    spec:
+      containers:
+        - name: mysql-exporter
+          image: prom/mysqld-exporter:latest
+          ports:
+            - containerPort: 9104
+          env:
+            - name: DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: vets-db-mysql
+                  key: mysql-root-password
+            - name: DATA_SOURCE_NAME
+              value: "root:$(DATASOURCE_PASSWORD)@(vets-db-mysql.spring-petclinic.svc.cluster.local:3306)/service_instance_db"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-exporter-visits
+  namespace: spring-petclinic
+spec:
+  selector:
+    matchLabels:
+      app: mysql-exporter-visits
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mysql-exporter-visits
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9104"
+    spec:
+      containers:
+        - name: mysql-exporter
+          image: prom/mysqld-exporter:latest
+          ports:
+            - containerPort: 9104
+          env:
+            - name: DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: visits-db-mysql
+                  key: mysql-root-password
+            - name: DATA_SOURCE_NAME
+              value: "root:$(DATASOURCE_PASSWORD)@(visits-db-mysql.spring-petclinic.svc.cluster.local:3306)/service_instance_db"
+
