@@ -4,7 +4,6 @@ import sys
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 import json
 import time
-import os
 
 prefixes = ["application_", "container_", "disk_", "envoy_", "executor_", "hikaricp_", "http_", "istio_", "jdbc_",
             "jvm_", "tomcat_"]
@@ -33,18 +32,25 @@ Prometheus hourly data as csv.
 writer = csv.writer(sys.stdout)
 parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
 parser.add_argument("-t", "--time", help="what time of data to get", default="5s")
-parser.add_argument("-o", "--output", help="output file name", default=time.strftime("%Y%m%d-%H%M%S-metrics.json"))
+parser.add_argument("-om", "--output_metadata", help="metrics metadata file name", default=time
+                    .strftime("%Y%m%d-%H%M%S-metrics-metadata.json"))
+parser.add_argument("-ov", "--output_values", help="metrics values file name", default=time
+                    .strftime("%Y%m%d-%H%M%S-metrics-values.json"))
 parser.add_argument("host", help="Prometheus host")
 args = vars(parser.parse_args())
 
 url = args["host"]
 time = args["time"]
-output = args["output"]
+output_metadata = args["output_metadata"]
+output_values = args["output_values"]
+
 
 metricNames = get_metrics_names(url)
 writeHeader = True
 isFirst = True
-with open(output, 'a', encoding='utf-8') as f:
+with open(output_metadata, 'a', encoding='utf-8') as f:
+    f.write("[\n")
+with open(output_values, 'a', encoding='utf-8') as f:
     f.write("[\n")
 for metricName in metricNames:
     response = requests.get('{0}/api/v1/query'.format(url),
@@ -53,11 +59,17 @@ for metricName in metricNames:
     for result in results:
         if result['metric'].get('app', '') in app_names \
                 or app_name_is_substring_of_label(result['metric'].get('pod', '')):
-            with open(output, 'a', encoding='utf-8') as f:
+            with open(output_values, 'a', encoding='utf-8') as f:
+                if not isFirst:
+                    f.write(",\n")
+                json.dump(result['values'], f, ensure_ascii=False, indent=4)
+            with open(output_metadata, 'a', encoding='utf-8') as f:
                 if not isFirst:
                     f.write(",\n")
                 else:
                     isFirst = False
                 json.dump(result['metric'], f, ensure_ascii=False, indent=4)
-with open(output, 'a', encoding='utf-8') as f:
+with open(output_metadata, 'a', encoding='utf-8') as f:
+    f.write("\n]")
+with open(output_values, 'a', encoding='utf-8') as f:
     f.write("\n]")
