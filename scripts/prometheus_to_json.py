@@ -26,6 +26,14 @@ def app_name_is_substring_of_label(label):
     return False
 
 
+def get_app_name(metric):
+    app_name = metric.get('app', '')
+    if app_name != '':
+        return app_name
+    else:
+        return metric.get('pod', '')
+
+
 """
 Prometheus hourly data as csv.
 """
@@ -44,7 +52,6 @@ time = args["time"]
 output_metadata = args["output_metadata"]
 output_values = args["output_values"]
 
-
 metricNames = get_metrics_names(url)
 writeHeader = True
 isFirst = True
@@ -62,7 +69,10 @@ for metricName in metricNames:
             with open(output_values, 'a', encoding='utf-8') as f:
                 if not isFirst:
                     f.write(",\n")
-                json.dump(result['values'], f, ensure_ascii=False, indent=4)
+                values_for_metric = {'metric_name': result['metric']['__name__'],
+                                     'app': get_app_name(result['metric']),
+                                     'values': result['values']}
+                json.dump(values_for_metric, f, ensure_ascii=False, indent=4)
             with open(output_metadata, 'a', encoding='utf-8') as f:
                 if not isFirst:
                     f.write(",\n")
