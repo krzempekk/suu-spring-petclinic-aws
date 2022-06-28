@@ -86,6 +86,13 @@ In particular, we gather metrics with the following prefix:
 * `tomcat_` - Tomcat metrics
 * `mysql_` - MYSQL metrics
 
+### Running tests and extracting telemetry
+`export TEST_NUMBER=1`
+`./scripts/runLoadScript.sh`
+`./scripts/testExtract.sh`
+
+Results of the tests will be in a directory named `test-data`.
+
 ## Run JMeter load for Kubernetes deployment on AWS
 
 ### Prerequisites
