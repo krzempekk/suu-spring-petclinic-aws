@@ -5,7 +5,7 @@ import os
 test_num = os.getenv('TEST_NUMBER')
 if test_num is None:
     test_num = '1'
-BASE_FOLDER = f'test-data/test-{test_num}'
+BASE_FOLDER = f'test-data/test-{test_num}/traces'
 TRACES_PER_REQUEST = 100
 
 if not os.path.exists(BASE_FOLDER):

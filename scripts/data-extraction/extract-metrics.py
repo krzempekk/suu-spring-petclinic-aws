@@ -46,12 +46,12 @@ Prometheus hourly data as csv.
 """
 writer = csv.writer(sys.stdout)
 parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
-parser.add_argument("-t", "--time", help="what time of data to get", default="20m")
+parser.add_argument("-t", "--time", help="what time of data to get", default="5m")
 parser.add_argument("-om", "--output_metadata", help="metrics metadata file name", default=time
                     .strftime("%Y%m%d-%H%M%S-metrics-metadata.json"))
 parser.add_argument("-ov", "--output_values", help="metrics values file name", default=time
                     .strftime("%Y%m%d-%H%M%S-metrics-values.json"))
-parser.add_argument("host", help="Prometheus host", default="http://localhost:9090")
+parser.add_argument("-ho", "--host", help="Prometheus host", default="http://localhost:9090")
 args = vars(parser.parse_args())
 
 url = args["host"]
