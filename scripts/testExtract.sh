@@ -1,5 +1,7 @@
 #!/bin/bash
 
-sh ./scripts/runLoadScript.sh &&
 istioctl dashboard zipkin &
-sleep 20 && python3 ./scripts/data-extraction/extract-traces.py $TEST_NUMBER
+istioctl dashboard prometheus &
+sleep 20 &&
+python3 ./scripts/data-extraction/extract-traces.py &
+python3 ./scripts/data-extraction/extract-metrics.py

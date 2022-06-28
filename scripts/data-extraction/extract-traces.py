@@ -1,12 +1,11 @@
 import requests
 import json
 import os
-import sys
 
-test_num = 1
-if len(sys.argv) > 1:
-    test_num = sys.argv[1]
-BASE_FOLDER = f'test-data/test-{test_num}'
+test_num = os.getenv('TEST_NUMBER')
+if test_num is None:
+    test_num = '1'
+BASE_FOLDER = f'test-data/test-{test_num}/traces'
 TRACES_PER_REQUEST = 100
 
 if not os.path.exists(BASE_FOLDER):

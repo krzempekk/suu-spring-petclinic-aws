@@ -14,7 +14,7 @@ app_names = ["customers-service", "vets-service", "visits-service", "api-gateway
 test_num = os.getenv('TEST_NUMBER')
 if test_num is None:
     test_num = '1'
-BASE_FOLDER = f'test-data/test-{test_num}'
+BASE_FOLDER = f'test-data/test-{test_num}/metrics'
 
 if not os.path.exists(BASE_FOLDER):
     os.makedirs(BASE_FOLDER)
@@ -23,7 +23,7 @@ def get_metrics_names(url):
     response = requests.get('{0}/api/v1/label/__name__/values'.format(url))
     names = response.json()['data']
     filtered = list(filter(lambda name: name.lower().startswith(tuple(prefixes)), names))
-    # Return filtered metric names
+    # Return filter ed metric names
     return filtered
 
 
@@ -47,12 +47,12 @@ Prometheus hourly data as csv.
 """
 writer = csv.writer(sys.stdout)
 parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
-parser.add_argument("-t", "--time", help="what time of data to get", default="20m")
+parser.add_argument("-t", "--time", help="what time of data to get", default="5m")
 parser.add_argument("-om", "--output_metadata", help="metrics metadata file name", default=time
                     .strftime("%Y%m%d-%H%M%S-metrics-metadata.json"))
 parser.add_argument("-ov", "--output_values", help="metrics values file name", default=time
                     .strftime("%Y%m%d-%H%M%S-metrics-values.json"))
-parser.add_argument("host", help="Prometheus host", default="http://localhost:9090")
+parser.add_argument("-ho", "--host", help="Prometheus host", default="http://localhost:9090")
 args = vars(parser.parse_args())
 
 url = args["host"]
