@@ -4,8 +4,8 @@ aws configure set default.region us-east-1
 aws configure set default.output json
 export REPOSITORY_PREFIX=iffern
 export LAB_ROLE=arn:aws:iam::519536199361:role/LabRole
-export SUBNET_A=subnet-08cfc3a037d43c123
-export SUBNET_B=subnet-0f67730b4be78c5dc
+export SUBNET_A=subnet-0ad7abaa2c17af797
+export SUBNET_B=subnet-0c5316eedeabbd7ed
 
 # Creating cluster and nodes
 
@@ -63,7 +63,7 @@ kubectl create namespace istio-system
 kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.13/samples/addons/prometheus.yaml
 kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.13/samples/addons/grafana.yaml
 kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.13/samples/addons/jaeger.yaml
-kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.14/samples/addons/extras/zipkin.yaml
+kubectl apply -f ./k8s/zipkin/zipkin.yaml
 
 # kubectl -n istio-system get pods
 # kubectl -n istio-system get svc

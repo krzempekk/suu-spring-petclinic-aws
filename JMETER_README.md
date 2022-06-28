@@ -1,6 +1,6 @@
 # Prerequisites
 - [jmeter v5.5](https://jmeter.apache.org/download_jmeter.cgi)
-- JMeter plugin [Ultimate Thread Group](https://jmeter-plugins.org/wiki/UltimateThreadGroup/) - needed only for scripts modifications
+- JMeter plugin [Ultimate Thread Group](https://jmeter-plugins.org/wiki/UltimateThreadGroup/)
 
 # How to run scripts?
 
@@ -52,3 +52,9 @@ Test plans have different number of parallel users, and differn in how the numbe
 
 ![image](https://user-images.githubusercontent.com/49311489/174456674-d36798ab-36b7-4074-a82c-ccba24e4ca76.png)
 
+# Running tests and extracting telemetry
+`export TEST_NUMBER=1`
+`./scripts/runLoadScript.sh`
+`./scripts/testExtract.sh`
+
+Results of the tests will be in a directory named `test-data`.
