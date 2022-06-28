@@ -24,7 +24,7 @@ Once the app is running in AWS, you can extract metrics from all services and co
 
 #### Steps
 1. Run `istioctl dashboard prometheus`. This will forward Prometheus to your local port.
-2. Run `python extract-metrics.py -t [time] -om [metrics metadata file name] -ov [metrics values file name]`. 
+2. Run `python extract-metrics.py -t [time] -ho [Prometheus host] -om [metrics metadata file name] -ov [metrics values file name]`. 
    The script will save all metrics that Prometheus collected in two JSON files: one with metadata metrics, 
    one with metadata values. Metrics for all services will be collected in those two files.
 

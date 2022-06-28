@@ -1,286 +1,152 @@
-# Distributed version of the Spring PetClinic - adapted for Cloud Foundry and Kubernetes 
+# Distributed version of the Spring PetClinic - adapted for AWS and Kubernetes 
 
 [![Build Status](https://travis-ci.org/spring-petclinic/spring-petclinic-cloud.svg?branch=master)](https://travis-ci.org/spring-petclinic/spring-petclinic-cloud/) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 This microservices branch was initially derived from the [microservices version](https://github.com/spring-petclinic/spring-petclinic-microservices) to demonstrate how to split sample Spring application into [microservices](http://www.martinfowler.com/articles/microservices.html).
 To achieve that goal we use Spring Cloud Gateway, Spring Cloud Circuit Breaker, Spring Cloud Config, Spring Cloud Sleuth, Resilience4j, Micrometer and the Eureka Service Discovery from the [Spring Cloud Netflix](https://github.com/spring-cloud/spring-cloud-netflix) technology stack. While running on Kubernetes, some components (such as Spring Cloud Config and Eureka Service Discovery) are replaced with Kubernetes-native features such as config maps and Kubernetes DNS resolution.
 
-This fork also demostrates the use of free distributed tracing with Tanzu Observability by Wavefront, which provides cloud-based monitoring of  Spring Boot applications with 5 days of history.
+## Deployment on AWS with Kubernetes
+
+### Prerequisites
+- [aws-cli v2.5.8](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- [kubectl v1.23.6](https://kubernetes.io/docs/tasks/tools/)
+- [istio v1.9.0](https://istio.io/latest/docs/setup/getting-started/#download)
+- install **helm v3.8.0** - `./get_helm.sh --version v3.8.0`
+
+### Deployment
+1. Start **AWS** lab and paste **AWS CLI** (from **AWS Details**) credentials to `~/.aws/credentials`
+2. Modify `./scripts/deploy.sh` script.
+   Set ARN of [LabRole](https://us-east-1.console.aws.amazon.com/iamv2/home?region=us-east-1#/roles/details/LabRole?section=permissions) to `LAB_ROLE` variable.
+   Set two [subnet ID](https://us-east-1.console.aws.amazon.com/vpc/home?region=us-east-1#subnets:) to `SUBNET_A` and `SUBNET_B` variables.
+3. Run `./scripts/deploy.sh` script
+
+### Deploying own service images to Docker Hub
+The current version of services were deployed to public Docker Hub. If any changes
+are made to services, they need to be redeployed.
+
+How to do that?
+
+1. Make sure you're already logged in by running `docker login <endpoint>` or `docker login` if you're just targeting Docker hub.
+2. Setup an env variable to target your Docker registry, e.g.
+`export REPOSITORY_PREFIX=iffern`
+3. Run `mvn spring-boot:build-image -Pk8s -DREPOSITORY_PREFIX=${REPOSITORY_PREFIX} && ./scripts/pushImages.sh`
+4. Change `REPOSITORY_PREFIX` in `./scripts/deploy.sh` script.
+
+### Telemetry
+#### Metrics
+``istioctl dashboard prometheus``
+#### Traces
+``istioctl dashboard zipkin``
+
+## Extracting traces and metrics from Kubernetes
+
+### Extracting traces
+Once the app is running in AWS, you can extract traces from all instrumented services.
+
+#### Steps
+1. Run `istioctl dashboard zipkin`. This will forward Zipkin to your local port.
+2. Run `python ./scripts/data-extraction/extract-traces.py`. The script will save all traces that Zipkin collected in JSON files named by the services that produced the traces.
+
+#### Trace data format
+The trace format is compliant with the OpenTelemetry standard.
+A trace is a collection of spans. A span represents a unit of work done by a particular service.
+
+A span contains:
+* traceId, id
+* timestamp
+* duration
+* annotations
+* tags
+
+A full description is availabe [here](https://zipkin.io/zipkin-api/#/).
 
 
-  * [Understanding the Spring Petclinic application](#understanding-the-spring-petclinic-application)
-  * [Compiling and pushing to Cloud Foundry:](#compiling-and-pushing-to-cloud-foundry)
-  * [Compiling and pushing to Kubernetes](#compiling-and-pushing-to-kubernetes)
-    + [Choose your Docker registry](#choose-your-docker-registry)
-    + [Setting things up in Kubernetes](#setting-things-up-in-kubernetes)
-    + [Settings up databases with helm](#settings-up-databases-with-helm)
-    + [Deploying the application](#deploying-the-application)
-  * [Starting services locally without Docker](#starting-services-locally-without-docker)
-  * [Starting services locally with docker-compose](#starting-services-locally-with-docker-compose)
-  * [In case you find a bug/suggested improvement for Spring Petclinic Microservices](#in-case-you-find-a-bug-suggested-improvement-for-spring-petclinic-microservices)
-  * [Database configuration](#database-configuration)
-    + [Start a MySql database](#start-a-mysql-database)
-    + [Use the Spring 'mysql' profile](#use-the-spring--mysql--profile)
-  * [Custom metrics monitoring](#custom-metrics-monitoring)
-    + [Using Prometheus](#using-prometheus)
-    + [Using Grafana with Prometheus](#using-grafana-with-prometheus)
-    + [Custom metrics](#custom-metrics)
-  * [Looking for something in particular?](#looking-for-something-in-particular-)
-  * [Interesting Spring Petclinic forks](#interesting-spring-petclinic-forks)
-- [Contributing](#contributing)
+### Extracting metrics
+Once the app is running in AWS, you can extract metrics from all services and containers.
 
+#### Steps
+1. Run `istioctl dashboard prometheus`. This will forward Prometheus to your local port.
+2. Run `python ./scripts/data-extraction/extract-metrics.py -t [time] -ho [Prometheus host] -om [metrics metadata file name] -ov [metrics values file name]`.
+   The script will save all metrics that Prometheus collected in two JSON files: one with metadata metrics,
+   one with metadata values. Metrics for all services will be collected in those two files.
+
+#### Collected metrics
+The metrics collected from Prometheus are limited to application metrics, database metrics and some container metrics.
+In particular, we gather metrics with the following prefix:
+* `application_` - apps runtime metrics
+* `container_` - container metrics (only related to apps' containers)
+* `disk_` - disk in containers metrics ((only related to apps' containers))
+* `envoy_` - Envoy metrics (only related to apps' containers)
+* `executor_` - task execution metrics
+* `hikaricp_` - Hikari-specific data source metrics
+* `http_` - HTTP client metrics
+* `istio_` - Istio metrics (only related to apps' containers)
+* `jdbc_` - data source metrics
+* `jvm_` - JVM metrics
+* `tomcat_` - Tomcat metrics
+* `mysql_` - MYSQL metrics
+
+## Run JMeter load for Kubernetes deployment on AWS
+
+### Prerequisites
+- [jmeter v5.5](https://jmeter.apache.org/download_jmeter.cgi)
+- JMeter plugin [Ultimate Thread Group](https://jmeter-plugins.org/wiki/UltimateThreadGroup/)
+
+### How to run scripts?
+
+Run `./scripts/runLoadScript.sh` (you may need to adjust parameters).
+
+### Pre-prepared scripts
+
+#### JMeter test plans
+
+Five test plans for JMeter were prepared, and they are included in test-plans folder.
+
+For single user, following requests are made:
+- list all owners
+- add owner
+- get owner details
+- update owner
+- add pet (randomly - add two pets)
+- update pet
+- list all veterinarians
+- add veterinarian visit (randomly - add two visits)
+
+Test plans have different number of parallel users, and differn in how the number of user changes in time. The test schedule for plans can be seen below:
+
+##### Test plan 1:
+
+![image](https://user-images.githubusercontent.com/49311489/174455975-3e5d3d5b-db79-43ba-9150-836d9faee07a.png)
+
+##### Test plan 2:
+
+![image](https://user-images.githubusercontent.com/49311489/174455982-5afebd06-8ad5-4efd-bb87-c6d5a3ea70e4.png)
+
+##### Test plan 3:
+
+![image](https://user-images.githubusercontent.com/49311489/174455997-2949d4f4-becb-4ff4-9fcd-263586ef983d.png)
+
+##### Test plan 4:
+
+![image](https://user-images.githubusercontent.com/49311489/174456008-43aee93e-6fb3-443a-9b03-357a2b197cb9.png)
+
+##### Test plan 5:
+
+![image](https://user-images.githubusercontent.com/49311489/174456020-460681c0-9fd2-4214-94ef-d33eee0dcc1f.png)
+
+#### How to modify scripts?
+
+- Run GUI for JMeter
+- Open script you want to modify
+- To modify load, go to **jp@gc - Ultimate Thred Group**, then adjust load in **Threads Schedule**:
+
+![image](https://user-images.githubusercontent.com/49311489/174456674-d36798ab-36b7-4074-a82c-ccba24e4ca76.png)
 
 ## Understanding the Spring Petclinic application
 
 [See the presentation of the Spring Petclinic Framework version](http://fr.slideshare.net/AntoineRey/spring-framework-petclinic-sample-application)
 
-[A blog bost introducing the Spring Petclinic Microsevices](http://javaetmoi.com/2018/10/architecture-microservices-avec-spring-cloud/) (french language)
-
-You can then access petclinic here: http://localhost:8080/
-
 ![Spring Petclinic Microservices screenshot](./docs/application-screenshot.png?lastModify=1596391473)
-
-
-
-
-## Compiling and pushing to Cloud Foundry:
-
-The samples below are using Tanzu Application Service (previously Pivotal Cloud Foundry) as the target Cloud Foundry deployment, some adjustments may be needed for other Cloud Foundry distributions.
-
-Please make sure you have the latest `cf` cli installed: https://docs.cloudfoundry.org/cf-cli/install-go-cli.html  
-For more information on Tanzu Application Service, see: https://docs.pivotal.io/application-service/2-10/overview/dev.html  
-For a list of available Cloud Foundry distributions, see: https://www.cloudfoundry.org/certified-platforms/  
-For local testing and development, you can use PCF Dev: https://docs.pivotal.io/pcf-dev/  
-
-This application uses Wavefront as a SaaS that can provide free Spring Boot monitoring and Open Tracing for your application. If you'd like to remove the Wavefront integration, please remove the `wavefront` user-provided service reference from [manifest.yml](./manifest.yml). 
-
-Otherwise, generate a free wavefront token by running one of the apps, for example:
-
-```bash
-cd spring-petclinic-api-gateway
-mvn spring-boot:run
-```
-
-You will see something like this in the logs:
-
-```
-A Wavefront account has been provisioned successfully and the API token has been saved to disk.
-
-To share this account, make sure the following is added to your configuration:
-
-	management.metrics.export.wavefront.api-token=2e41f7cf-1111-2222-3333-7397a56113ca
-	management.metrics.export.wavefront.uri=https://wavefront.surf
-
-Connect to your Wavefront dashboard using this one-time use link:
-https://wavefront.surf/us/AAA4s5f8xJ9yD
-
-```
-
-You free account has now been created.
-
-Create a user-provided service for Wavefront using the data above. For example:
-
-```
-cf cups -p '{"uri": "https://wavefront.surf", "api-token": "2e41f7cf-1111-2222-3333-7397a56113ca", "application-name": "spring-petclinic-cloudfoundry", "fremium": "true"}' wavefront
-```
-If your operator deployed the wavefront proxy in your Cloud Foundry environment, point the URI to the proxy instead. You can obtain the value of the IP and port by creating a service key of the wavefront proxy and viewing the resulting JSON file. 
-
-Contine with creating the services and deploying the application's microservices. A sample is available at `scripts/deployToCloudFoundry.sh`. Note that some of the services' plans may be different in your environment, so please review before executing. For example, you want want to fork the [spring-petclinic-cloud-config](https://github.com/spring-petclinic/spring-petclinic-cloud-config.git) repository if you want to make changes to the configuration.
-
-```
-echo "Creating Required Services..."
-{
-  cf create-service -c '{ "git": { "uri": "https://github.com/spring-petclinic/spring-petclinic-cloud-config.git", "periodic": true }, "count": 3 }' p.config-server standard config &
-  cf create-service p.service-registry standard registry & 
-  cf create-service p.mysql db-small customers-db &
-  cf create-service p.mysql db-small vets-db &
-  cf create-service p.mysql db-small visits-db &
-  sleep 5
-} &> /dev/null
-until [ `cf service config | grep -c "succeeded"` -ge 1  ] && [ `cf service registry | grep -c "succeeded"` -ge 1  ] && [ `cf service customers-db | grep -c "succeeded"` -ge 1  ] && [ `cf service vets-db | grep -c "succeeded"` -ge 1  ] && [ `cf service visits-db | grep -c "succeeded"` -ge 1  ]
-do
-  echo -n "."
-done
-
-mvn clean package -Pcloud
-cf push --no-start
-
-cf add-network-policy api-gateway --destination-app vets-service --protocol tcp --port 8080
-cf add-network-policy api-gateway --destination-app customers-service --protocol tcp --port 8080
-cf add-network-policy api-gateway --destination-app visits-service --protocol tcp --port 8080
-
-cf start vets-service & cf start visits-service & cf start customers-service & cf start api-gateway &
-```
-
-You can now access your application by querying the route for the `api-gateway`:
-
-```
-✗ cf apps
-Getting apps in org pet-clinic / space pet-clinic as user@email.com...
-OK
-
-name                requested state   instances   memory   disk   urls
-api-gateway         started           1/1         1G       1G     api-gateway.apps.mysite.com
-customers-service   started           1/1         1G       1G     customers-service.apps.internal
-vets-service        started           1/1         1G       1G     vets-service.apps.internal
-visits-service      started           1/1         1G       1G     visits-service.apps.internal
-
-```
-
-Access your route (like `api-gateway.apps.mysite.com` above) to see the application.
-
-Access the one-time URL you received when bootstraping Wavefront to see Zipkin traces and other monitoring of your microservices:
-
-![Wavefront dashboard screen](./docs/wavefront-summary.png)
-
-Since we've included `brave.mysql8` in our `pom.xml`, the traces even show the various DB queries traces:
-
-![Wavefront dashboard screen](./docs/wavefront-traces.png)
-
-
-
-## Compiling and pushing to Kubernetes
-
-This get a little bit more complicated when deploying to Kubernetes, since we need to manage Docker images, exposing services and more yaml. But we can pull through!
-
-### Choose your Docker registry
-
-You need to define your target Docker registry. Make sure you're already logged in by running `docker login <endpoint>` or `docker login` if you're just targeting Docker hub.
-
-Setup an env variable to target your Docker registry. If you're targeting Docker hub, simple provide your username, for example:
-
-```bash
-export REPOSITORY_PREFIX=odedia
-```
-
-For other Docker registries, provide the full URL to your repository, for example:
-
-```bash
-export REPOSITORY_PREFIX=harbor.myregistry.com/demo
-```
-
-One of the neat features in Spring Boot 2.3 is that it can leverage [Cloud Native Buildpacks](https://buildpacks.io) and [Paketo Buildpacks](https://paketo.io) to build production-ready images for us. Since we also configured the `spring-boot-maven-plugin` to use `layers`, we'll get optimized layering of the various components that build our Spring Boot app for optimal image caching. What this means in practice is that if we simple change a line of code in our app, it would only require us to push the layer containing our code and not the entire uber jar. To build all images and pushing them to your registry, run:
-
-```bash
-mvn spring-boot:build-image -Pk8s -DREPOSITORY_PREFIX=${REPOSITORY_PREFIX} && ./scripts/pushImages.sh
-```
-
-Since these are standalone microservices, you can also `cd` into any of the project folders and build it indivitually (as well as push it to the registry).
-
-You should now have all your images in your Docker registry. It might be good to make sure you can see them available.
-
-Make sure you're targeting your Kubernetes cluster.
-
-Docker images for kubernetes have been published into DockerHub in the [springcommunity](https://hub.docker.com/u/springcommunity)
-organization. You can pull an image:
-```
-docker pull springcommunity/spring-petclinic-cloud-discovery-service
-```
-
-### Setting things up in Kubernetes
-
-Create the `spring-petclinic` namespace for Spring petclinic:
-
-```bash
-kubectl apply -f k8s/init-namespace/ 
-```
-
-Create a Kubernetes secret to store the URL and API Token of Wavefront (replace values with your own real ones):
-
-```bash
-kubectl create secret generic wavefront -n spring-petclinic --from-literal=wavefront-url=https://wavefront.surf --from-literal=wavefront-api-token=2e41f7cf-1111-2222-3333-7397a56113ca
-```
-
-Create the Wavefront proxy pod, and the various Kubernetes services that will be used later on by our deployments:
-
-```bash
-kubectl apply -f k8s/init-services
-```
-
-Verify the services are available:
-
-```bash
-✗ kubectl get svc -n spring-petclinic
-NAME                TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)             AGE
-api-gateway         LoadBalancer   10.7.250.24    <pending>     80:32675/TCP        36s
-customers-service   ClusterIP      10.7.245.64    <none>        8080/TCP            36s
-vets-service        ClusterIP      10.7.245.150   <none>        8080/TCP            36s
-visits-service      ClusterIP      10.7.251.227   <none>        8080/TCP            35s
-wavefront-proxy     ClusterIP      10.7.253.85    <none>        2878/TCP,9411/TCP   37s
-```
-
-Verify the wavefront proxy is running:
-
-```bash
-✗ kubectl get pods -n spring-petclinic
-NAME                              READY   STATUS    RESTARTS   AGE
-wavefront-proxy-dfbd4b695-fdd6t   1/1     Running   0          36s
-
-```
-
-### Settings up databases with helm
-
-We'll now need to deploy our databases. For that, we'll use helm. You'll need helm 3 and above since we're not using Tiller in this deployment.
-
-Make sure you have a single `default` StorageClass in your Kubernetes cluster:
-
-```bash
-✗ kubectl get sc
-NAME                 PROVISIONER            AGE
-standard (default)   kubernetes.io/gce-pd   6h11m
-
-```
-
-Deploy the databases:
-
-```bash
-helm repo add bitnami https://charts.bitnami.com/bitnami
-helm repo update
-helm install vets-db-mysql bitnami/mysql --namespace spring-petclinic --version 8.8.8 --set auth.database=service_instance_db
-helm install visits-db-mysql bitnami/mysql --namespace spring-petclinic  --version 8.8.8 --set auth.database=service_instance_db
-helm install customers-db-mysql bitnami/mysql --namespace spring-petclinic  --version 8.8.8 --set auth.database=service_instance_db
-```
-
-### Deploying the application
-
-Our deployment YAMLs have a placeholder called `REPOSITORY_PREFIX` so we'll be able to deploy the images from any Docker registry. Sadly, Kubernetes doesn't support environment variables in the YAML descriptors. We have a small script to do it for us and run our deployments:
-
-```bash
-./scripts/deployToKubernetes.sh
-```
-
-Verify the pods are deployed:
-
-```bash
-✗ kubectl get pods -n spring-petclinic 
-NAME                                 READY   STATUS    RESTARTS   AGE
-api-gateway-585fff448f-q45jc         1/1     Running   0          4m20s
-customers-db-mysql-0                 1/1     Running   0          11m
-customers-service-5d7d686654-kpcmx   1/1     Running   0          4m19s
-vets-db-mysql-0                      1/1     Running   0          11m
-vets-service-85cb8677df-l5xpj        1/1     Running   0          4m2s
-visits-db-mysql-0                    1/1     Running   0          11m
-visits-service-654fffbcc7-zj2jw      1/1     Running   0          4m2s
-wavefront-proxy-dfbd4b695-fdd6t      1/1     Running   0          14m
-```
-
-Get the `EXTERNAL-IP` of the API Gateway:
-
-```bash
-✗ kubectl get svc -n spring-petclinic api-gateway 
-NAME          TYPE           CLUSTER-IP    EXTERNAL-IP      PORT(S)        AGE
-api-gateway   LoadBalancer   10.7.250.24   34.1.2.22   80:32675/TCP   18m
-```
-
-You can now browse to that IP in your browser and see the application running.
-
-You should also see monitoring and traces from Wavefront under the application name `spring-petclinic-k8s`:
-
-![Wavefront dashboard screen](./docs/wavefront-k8s.png)
-
-
-
-
 
 ## Starting services locally without Docker
 
