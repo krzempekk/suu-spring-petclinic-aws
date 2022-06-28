@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.4.3">
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.5">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Spring Petclinic Microservices" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
@@ -56,47 +56,33 @@
       <hashTree/>
       <kg.apc.jmeter.threads.UltimateThreadGroup guiclass="kg.apc.jmeter.threads.UltimateThreadGroupGui" testclass="kg.apc.jmeter.threads.UltimateThreadGroup" testname="jp@gc - Ultimate Thread Group" enabled="true">
         <collectionProp name="ultimatethreadgroupdata">
-          <collectionProp name="1778118376">
-            <stringProp name="1567">10</stringProp>
+          <collectionProp name="-712921235">
+            <stringProp name="49">1</stringProp>
             <stringProp name="48">0</stringProp>
+            <stringProp name="1572">15</stringProp>
+            <stringProp name="1722">60</stringProp>
             <stringProp name="1567">10</stringProp>
-            <stringProp name="48687">120</stringProp>
-            <stringProp name="1567">10</stringProp>
           </collectionProp>
-          <collectionProp name="-619708345">
-            <stringProp name="1629">30</stringProp>
-            <stringProp name="48718">130</stringProp>
-            <stringProp name="1598">20</stringProp>
-            <stringProp name="48687">120</stringProp>
-            <stringProp name="1598">20</stringProp>
-          </collectionProp>
-          <collectionProp name="1813988593">
-            <stringProp name="1691">50</stringProp>
-            <stringProp name="49803">270</stringProp>
-            <stringProp name="1598">20</stringProp>
-            <stringProp name="48687">120</stringProp>
-            <stringProp name="1598">20</stringProp>
-          </collectionProp>
-          <collectionProp name="1104699805">
+          <collectionProp name="1011480832">
+            <stringProp name="51">3</stringProp>
             <stringProp name="1753">70</stringProp>
-            <stringProp name="51539">410</stringProp>
-            <stringProp name="1598">20</stringProp>
-            <stringProp name="48687">120</stringProp>
-            <stringProp name="1598">20</stringProp>
+            <stringProp name="1572">15</stringProp>
+            <stringProp name="1722">60</stringProp>
+            <stringProp name="1572">15</stringProp>
           </collectionProp>
-          <collectionProp name="-704132523">
-            <stringProp name="1815">90</stringProp>
-            <stringProp name="52624">550</stringProp>
-            <stringProp name="1598">20</stringProp>
-            <stringProp name="48687">120</stringProp>
-            <stringProp name="1598">20</stringProp>
+          <collectionProp name="-784176755">
+            <stringProp name="53">5</stringProp>
+            <stringProp name="48754">145</stringProp>
+            <stringProp name="1572">15</stringProp>
+            <stringProp name="1722">60</stringProp>
+            <stringProp name="1572">15</stringProp>
           </collectionProp>
-          <collectionProp name="-421402771">
-            <stringProp name="48656">110</stringProp>
-            <stringProp name="53709">690</stringProp>
-            <stringProp name="1598">20</stringProp>
-            <stringProp name="48687">120</stringProp>
-            <stringProp name="48">0</stringProp>
+          <collectionProp name="996469324">
+            <stringProp name="55">7</stringProp>
+            <stringProp name="49648">220</stringProp>
+            <stringProp name="1572">15</stringProp>
+            <stringProp name="1722">60</stringProp>
+            <stringProp name="1572">15</stringProp>
           </collectionProp>
         </collectionProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">

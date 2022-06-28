@@ -56,54 +56,40 @@
       <hashTree/>
       <kg.apc.jmeter.threads.UltimateThreadGroup guiclass="kg.apc.jmeter.threads.UltimateThreadGroupGui" testclass="kg.apc.jmeter.threads.UltimateThreadGroup" testname="jp@gc - Ultimate Thread Group" enabled="true">
         <collectionProp name="ultimatethreadgroupdata">
-          <collectionProp name="465433483">
-            <stringProp name="53">5</stringProp>
+          <collectionProp name="-455890671">
+            <stringProp name="51">3</stringProp>
             <stringProp name="48">0</stringProp>
             <stringProp name="1598">20</stringProp>
-            <stringProp name="53430">600</stringProp>
+            <stringProp name="49710">240</stringProp>
             <stringProp name="48">0</stringProp>
           </collectionProp>
-          <collectionProp name="-1594109427">
-            <stringProp name="1567">10</stringProp>
+          <collectionProp name="409217774">
+            <stringProp name="51">3</stringProp>
+            <stringProp name="1691">50</stringProp>
+            <stringProp name="51">3</stringProp>
+            <stringProp name="53">5</stringProp>
+            <stringProp name="51">3</stringProp>
+          </collectionProp>
+          <collectionProp name="-1659414746">
+            <stringProp name="52">4</stringProp>
             <stringProp name="48625">100</stringProp>
-            <stringProp name="1567">10</stringProp>
+            <stringProp name="51">3</stringProp>
             <stringProp name="53">5</stringProp>
-            <stringProp name="10">10</stringProp>
+            <stringProp name="51">3</stringProp>
           </collectionProp>
-          <collectionProp name="-725087111">
-            <stringProp name="57">9</stringProp>
-            <stringProp name="49648">220</stringProp>
-            <stringProp name="1567">10</stringProp>
+          <collectionProp name="-360914429">
             <stringProp name="53">5</stringProp>
-            <stringProp name="10">10</stringProp>
+            <stringProp name="48780">150</stringProp>
+            <stringProp name="51">3</stringProp>
+            <stringProp name="53">5</stringProp>
+            <stringProp name="51">3</stringProp>
           </collectionProp>
-          <collectionProp name="-2141520965">
-            <stringProp name="1573">16</stringProp>
-            <stringProp name="50578">310</stringProp>
-            <stringProp name="1567">10</stringProp>
+          <collectionProp name="359112468">
+            <stringProp name="54">6</stringProp>
+            <stringProp name="49586">200</stringProp>
+            <stringProp name="51">3</stringProp>
             <stringProp name="53">5</stringProp>
-            <stringProp name="10">10</stringProp>
-          </collectionProp>
-          <collectionProp name="2047421336">
-            <stringProp name="1598">20</stringProp>
-            <stringProp name="50702">350</stringProp>
-            <stringProp name="1567">10</stringProp>
-            <stringProp name="53">5</stringProp>
-            <stringProp name="10">10</stringProp>
-          </collectionProp>
-          <collectionProp name="-240966111">
-            <stringProp name="1568">11</stringProp>
-            <stringProp name="51570">420</stringProp>
-            <stringProp name="1567">10</stringProp>
-            <stringProp name="53">5</stringProp>
-            <stringProp name="10">10</stringProp>
-          </collectionProp>
-          <collectionProp name="1856499035">
-            <stringProp name="1569">12</stringProp>
-            <stringProp name="51756">480</stringProp>
-            <stringProp name="1567">10</stringProp>
-            <stringProp name="53">5</stringProp>
-            <stringProp name="10">10</stringProp>
+            <stringProp name="51">3</stringProp>
           </collectionProp>
         </collectionProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
