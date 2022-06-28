@@ -1,6 +1,5 @@
 #!/bin/bash
 
-sh ./scripts/runLoadScript.sh &&
 istioctl dashboard zipkin &
 istioctl dashboard prometheus &
 sleep 20 &&
