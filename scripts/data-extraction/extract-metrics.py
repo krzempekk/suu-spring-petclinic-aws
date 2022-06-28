@@ -13,7 +13,7 @@ app_names = ["customers-service", "vets-service", "visits-service", "api-gateway
 test_num = os.getenv('TEST_NUMBER')
 if test_num is None:
     test_num = '1'
-BASE_FOLDER = f'test-data/test-{test_num}'
+BASE_FOLDER = f'test-data/test-{test_num}/metrics'
 
 if not os.path.exists(BASE_FOLDER):
     os.makedirs(BASE_FOLDER)
