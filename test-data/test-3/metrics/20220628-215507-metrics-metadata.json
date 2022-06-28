@@ -1,0 +1,41 @@
+[
+{
+    "__name__": "application_ready_time_seconds",
+    "app": "api-gateway",
+    "instance": "172.31.20.52:8080",
+    "job": "kubernetes-pods",
+    "main_application_class": "org.springframework.samples.petclinic.api.ApiGatewayApplication",
+    "namespace": "spring-petclinic",
+    "pod": "api-gateway-cdc88477d-xcvk8",
+    "pod_template_hash": "cdc88477d"
+},
+{
+    "__name__": "application_ready_time_seconds",
+    "app": "customers-service",
+    "instance": "172.31.26.86:8080",
+    "job": "kubernetes-pods",
+    "main_application_class": "org.springframework.samples.petclinic.customers.CustomersServiceApplication",
+    "namespace": "spring-petclinic",
+    "pod": "customers-service-b4f78fd79-qsvqm",
+    "pod_template_hash": "b4f78fd79"
+},
+{
+    "__name__": "application_ready_time_seconds",
+    "app": "vets-service",
+    "instance": "172.31.27.116:8080",
+    "job": "kubernetes-pods",
+    "main_application_class": "org.springframework.samples.petclinic.vets.VetsServiceApplication",
+    "namespace": "spring-petclinic",
+    "pod": "vets-service-5d58f97895-rb4fw",
+    "pod_template_hash": "5d58f97895"
+},
+{
+    "__name__": "application_ready_time_seconds",
+    "app": "visits-service",
+    "instance": "172.31.18.40:8080",
+    "job": "kubernetes-pods",
+    "main_application_class": "org.springframework.samples.petclinic.visits.VisitsServiceApplication",
+    "namespace": "spring-petclinic",
+    "pod": "visits-service-79cd888f75-r8rhp",
+    "pod_template_hash": "79cd888f75"
+}
