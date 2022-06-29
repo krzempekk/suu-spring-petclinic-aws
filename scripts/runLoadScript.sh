@@ -10,7 +10,9 @@ while : ; do
   EXTERNAL_IP=$(kubectl get svc -n spring-petclinic api-gateway | sed -n '2p' | awk '{ print $4 }')
   curl $EXTERNAL_IP > /dev/null
   if (( $? == 0 )); then
+    export TESTS_START_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
     jmeter -Jhost=$EXTERNAL_IP -Jport=80 -n -t $TEST_PLAN -f -l $RESULTS_FILE
+    export TESTS_END_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
     break
   else
     echo "External IP unreachable, retrying..."
