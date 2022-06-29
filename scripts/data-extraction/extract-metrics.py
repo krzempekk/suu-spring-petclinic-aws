@@ -7,9 +7,10 @@ import time
 import os
 
 prefixes = ["application_", "container_", "disk_", "envoy_", "executor_", "hikaricp_", "http_", "istio_", "jdbc_",
-            "jvm_", "tomcat_"]
+            "jvm_", "tomcat_", "mysql_"]
 
-app_names = ["customers-service", "vets-service", "visits-service", "api-gateway"]
+app_names = ["customers-service", "vets-service", "visits-service", "api-gateway", "mysql-exporter-customers",
+             "mysql-exporter-vets", "mysql-exporter-visits"]
 test_num = os.getenv('TEST_NUMBER')
 if test_num is None:
     test_num = '1'

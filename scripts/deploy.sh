@@ -3,9 +3,9 @@
 aws configure set default.region us-east-1
 aws configure set default.output json
 export REPOSITORY_PREFIX=iffern
-export LAB_ROLE=arn:aws:iam::519536199361:role/LabRole
-export SUBNET_A=subnet-0ad7abaa2c17af797
-export SUBNET_B=subnet-0c5316eedeabbd7ed
+export LAB_ROLE=arn:aws:iam::139993199880:role/LabRole
+export SUBNET_A=subnet-03361c28c8dc021ed
+export SUBNET_B=subnet-0204c0acb43262bcf
 
 # Creating cluster and nodes
 
