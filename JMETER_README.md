@@ -26,23 +26,23 @@ Test plans have different number of parallel users, and differn in how the numbe
 
 ##### Test plan 1:
 
-![image](https://user-images.githubusercontent.com/49311489/174455975-3e5d3d5b-db79-43ba-9150-836d9faee07a.png)
+![image](docs/test/test-1.png)
 
 ##### Test plan 2:
 
-![image](https://user-images.githubusercontent.com/49311489/174455982-5afebd06-8ad5-4efd-bb87-c6d5a3ea70e4.png)
+![image](docs/test/test-2.png)
 
 ##### Test plan 3:
 
-![image](https://user-images.githubusercontent.com/49311489/174455997-2949d4f4-becb-4ff4-9fcd-263586ef983d.png)
+![image](docs/test/test-3.png)
 
 ##### Test plan 4:
 
-![image](https://user-images.githubusercontent.com/49311489/174456008-43aee93e-6fb3-443a-9b03-357a2b197cb9.png)
+![image](docs/test/test-4.png)
 
 ##### Test plan 5:
 
-![image](https://user-images.githubusercontent.com/49311489/174456020-460681c0-9fd2-4214-94ef-d33eee0dcc1f.png)
+![image](docs/test/test-5.png)
 
 # How to modify scripts?
 
