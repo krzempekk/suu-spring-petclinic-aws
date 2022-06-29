@@ -46,7 +46,10 @@ Prometheus hourly data as csv.
 """
 writer = csv.writer(sys.stdout)
 parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
-parser.add_argument("-t", "--time", help="what time of data to get", default="10m")
+parser.add_argument("-st", "--start_time", help="start timestamp", default=os.getenv('TESTS_START_DATE'))
+parser.add_argument("-et", "--end_time", help="end timestamp", default=os.getenv('TESTS_END_DATE'))
+parser.add_argument("-s", "--step", help="query resolution step width in duration format or float number of seconds",
+                    default='15s')
 parser.add_argument("-om", "--output_metadata", help="metrics metadata file name", default=time
                     .strftime("%Y%m%d-%H%M%S-metrics-metadata.json"))
 parser.add_argument("-ov", "--output_values", help="metrics values file name", default=time
@@ -55,7 +58,8 @@ parser.add_argument("-ho", "--host", help="Prometheus host", default="http://loc
 args = vars(parser.parse_args())
 
 url = args["host"]
-time = args["time"]
+start_timestamp = args["start_time"]
+end_timestamp = args["end_time"]
 output_metadata = f'{BASE_FOLDER}/{args["output_metadata"]}'
 output_values = f'{BASE_FOLDER}/{args["output_values"]}'
 
@@ -67,8 +71,8 @@ with open(output_metadata, 'a', encoding='utf-8') as f:
 with open(output_values, 'a', encoding='utf-8') as f:
     f.write("[\n")
 for metricName in metricNames:
-    response = requests.get('{0}/api/v1/query'.format(url),
-                            params={'query': metricName + '[' + time + ']'})
+    response = requests.get('{0}/api/v1/query_range'.format(url),
+                            params={'query': metricName, 'start': start_timestamp, 'end': end_timestamp, 'step': '15s'})
     results = response.json()['data']['result']
     for result in results:
         if result['metric'].get('app', '') in app_names \

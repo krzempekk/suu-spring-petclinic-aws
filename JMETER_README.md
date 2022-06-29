@@ -54,7 +54,7 @@ Test plans have different number of parallel users, and differn in how the numbe
 
 # Running tests and extracting telemetry
 `export TEST_NUMBER=1`
-`./scripts/runLoadScript.sh`
+`source ./scripts/runLoadScript.sh`
 `./scripts/testExtract.sh`
 
 Results of the tests will be in a directory named `test-data`.
