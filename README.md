@@ -50,16 +50,71 @@ Once the app is running in AWS, you can extract traces from all instrumented ser
 #### Trace data format
 The trace format is compliant with the OpenTelemetry standard.
 A trace is a collection of spans. A span represents a unit of work done by a particular service.
+It provides details regarding a particular request, such as operation details (address of the request, type of SQL statement etc.)
+as well as some info about the runtime environment of the process that performed such request (OS, opentelemetry versions, k8s info such as node name and pod name).
 
-A span contains:
+In general, a span contains:
 * traceId, id
 * timestamp
 * duration
 * annotations
 * tags
 
-A full description is availabe [here](https://zipkin.io/zipkin-api/#/).
-
+A full description of traces extracted from zipkin is available [here](https://zipkin.io/zipkin-api/#/).
+A more general description of the OpenTelemetry format is available [here](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/overview.md).
+#### Example trace
+Adding a new pet owner results in the following trace (visualization from Zipkin):
+![image](docs/add-owner-trace.png)
+Example span from the trace (the whole trace available [here](docs/add-owner.json):
+```json
+  {
+    "traceId": "94e58db376a8a1a9ecfa0da97fc38279",
+    "parentId": "2ad11349b1eaf1b9",
+    "id": "a07ad9a1c37c20da",
+    "kind": "CLIENT",
+    "name": "insert service_instance_db.owners",
+    "timestamp": 1656517226329615,
+    "duration": 2253,
+    "localEndpoint": {
+      "serviceName": "customers-service"
+    },
+    "tags": {
+      "container.id": "86ad28c4ce3abd57dda1acbaec4ffdbb17f9a2431c0cb476c11639d239d292ab",
+      "db.connection_string": "mysql://customers-db-mysql.spring-petclinic.svc.cluster.local:3306",
+      "db.name": "service_instance_db",
+      "db.operation": "INSERT",
+      "db.sql.table": "owners",
+      "db.statement": "insert into owners (address, city, first_name, last_name, telephone) values (?, ?, ?, ?, ?)",
+      "db.system": "mysql",
+      "db.user": "root",
+      "host.arch": "amd64",
+      "host.name": "customers-service-b4f78fd79-4vqt2",
+      "k8s.container.name": "customers-service",
+      "k8s.deployment.name": "customers-service",
+      "k8s.namespace.name": "spring-petclinic",
+      "k8s.node.name": "ip-172-31-89-40.ec2.internal",
+      "k8s.pod.name": "customers-service-b4f78fd79-4vqt2",
+      "k8s.replicaset.name": "customers-service-b4f78fd79",
+      "net.peer.name": "customers-db-mysql.spring-petclinic.svc.cluster.local",
+      "os.description": "Linux 5.4.196-108.356.amzn2.x86_64",
+      "os.type": "linux",
+      "otel.library.name": "io.opentelemetry.jdbc",
+      "otel.library.version": "1.11.1",
+      "process.command_line": "/layers/paketo-buildpacks_bellsoft-liberica/jre:bin:java -javaagent:/otel-auto-instrumentation/javaagent.jar -Djava.security.properties=/layers/paketo-buildpacks_bellsoft-liberica/java-security-properties/java-security.properties -XX:+ExitOnOutOfMemoryError -XX:ActiveProcessorCount=2 -XX:MaxDirectMemorySize=10M -Xmx713567K -XX:MaxMetaspaceSize=186272K -XX:ReservedCodeCacheSize=240M -Xss1M -XX:+UnlockDiagnosticVMOptions -XX:NativeMemoryTracking=summary -XX:+PrintNMTStatistics -Dorg.springframework.cloud.bindings.boot.enable=true",
+      "process.executable.path": "/layers/paketo-buildpacks_bellsoft-liberica/jre:bin:java",
+      "process.pid": "1",
+      "process.runtime.description": "BellSoft OpenJDK 64-Bit Server VM 11.0.15.1+2-LTS",
+      "process.runtime.name": "OpenJDK Runtime Environment",
+      "process.runtime.version": "11.0.15.1+2-LTS",
+      "telemetry.auto.version": "1.11.1",
+      "telemetry.sdk.language": "java",
+      "telemetry.sdk.name": "opentelemetry",
+      "telemetry.sdk.version": "1.11.0",
+      "thread.id": "56",
+      "thread.name": "http-nio-8080-exec-10"
+    }
+  }
+```
 
 ### Extracting metrics
 Once the app is running in AWS, you can extract metrics from all services and containers.
@@ -127,23 +182,23 @@ Test plans have different number of parallel users, and differn in how the numbe
 
 ##### Test plan 1:
 
-![image](https://user-images.githubusercontent.com/49311489/174455975-3e5d3d5b-db79-43ba-9150-836d9faee07a.png)
+![image](docs/test/test-1.png)
 
 ##### Test plan 2:
 
-![image](https://user-images.githubusercontent.com/49311489/174455982-5afebd06-8ad5-4efd-bb87-c6d5a3ea70e4.png)
+![image](docs/test/test-2.png)
 
 ##### Test plan 3:
 
-![image](https://user-images.githubusercontent.com/49311489/174455997-2949d4f4-becb-4ff4-9fcd-263586ef983d.png)
+![image](docs/test/test-3.png)
 
 ##### Test plan 4:
 
-![image](https://user-images.githubusercontent.com/49311489/174456008-43aee93e-6fb3-443a-9b03-357a2b197cb9.png)
+![image](docs/test/test-4.png)
 
 ##### Test plan 5:
 
-![image](https://user-images.githubusercontent.com/49311489/174456020-460681c0-9fd2-4214-94ef-d33eee0dcc1f.png)
+![image](docs/test/test-5.png)
 
 #### How to modify scripts?
 
