@@ -86,6 +86,8 @@ In particular, we gather metrics with the following prefix:
 * `tomcat_` - Tomcat metrics
 * `mysql_` - MYSQL metrics
 
+More about Java and Spring Boot specific metrics here: https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.metrics.supported
+
 ### Running tests and extracting telemetry
 `export TEST_NUMBER=1`
 `./scripts/runLoadScript.sh`
