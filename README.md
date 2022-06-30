@@ -59,7 +59,7 @@ How to do that?
 ### Extracting traces
 Once the app is running in AWS, you can extract traces from all instrumented services.
 
-#### Steps
+#### Steps (to extract traces only)
 1. Run `istioctl dashboard zipkin`. This will forward Zipkin to your local port.
 2. Run `python ./scripts/data-extraction/extract-traces.py`. The script will save all traces that Zipkin collected in JSON files named by the services that produced the traces.
 
@@ -135,7 +135,7 @@ Example span from the trace (the whole trace available [here](docs/add-owner.jso
 ### Extracting metrics
 Once the app is running in AWS, you can extract metrics from all services and containers.
 
-#### Steps
+#### Steps (to extract metrics only)
 1. Run `istioctl dashboard prometheus`. This will forward Prometheus to your local port.
 2. Run `python ./scripts/data-extraction/extract-metrics.py -t [time] -ho [Prometheus host] -om [metrics metadata file name] -ov [metrics values file name]`.
    The script will save all metrics that Prometheus collected in two JSON files: one with metadata metrics,
