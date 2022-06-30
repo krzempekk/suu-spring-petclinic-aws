@@ -20,6 +20,22 @@ To achieve that goal we use Spring Cloud Gateway, Spring Cloud Circuit Breaker, 
    Set two [subnet ID](https://us-east-1.console.aws.amazon.com/vpc/home?region=us-east-1#subnets:) to `SUBNET_A` and `SUBNET_B` variables.
 3. Run `./scripts/deploy.sh` script
 
+### Running tests and extracting telemetry
+If you don't have jmeter installed (it will install jmeter and Java 17):
+`source ./scripts/installJMeter.sh`
+
+Running Tests:
+
+`export TEST_NUMBER=1`
+
+`source ./scripts/runLoadScript.sh`
+
+Extracting telemetry:
+
+`./scripts/testExtract.sh`
+
+Results of the tests will be in a directory named `test-data`.
+
 ### Deploying own service images to Docker Hub
 The current version of services were deployed to public Docker Hub. If any changes
 are made to services, they need to be redeployed.
@@ -143,14 +159,6 @@ In particular, we gather metrics with the following prefix:
 
 More about Java and Spring Boot specific metrics here: https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.metrics.supported
 
-### Running tests and extracting telemetry
-`export TEST_NUMBER=1`
-
-`source ./scripts/runLoadScript.sh`
-
-`./scripts/testExtract.sh`
-
-Results of the tests will be in a directory named `test-data`.
 
 ## Run JMeter load for Kubernetes deployment on AWS
 
